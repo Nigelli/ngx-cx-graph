@@ -1,0 +1,123 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+mat-toolbar {
+  flex: none;
+  gap: 12px;
+  background: var(--mat-sys-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.brand {
+  font-weight: 700;
+}
+
+.sub {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.grow {
+  flex: 1 1 auto;
+}
+
+.page {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 16px;
+  min-height: 0;
+  padding: 16px;
+}
+
+.side {
+  flex: none;
+  width: 300px;
+}
+
+.note {
+  margin: 16px 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tools {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.find {
+  width: 280px;
+}
+
+.zoom {
+  min-width: 40px;
+  text-align: center;
+  font: var(--mat-sys-label-large);
+}
+
+cx-graph {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  mat-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.host {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+
+  > mat-icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    color: var(--mat-sys-primary);
+  }
+}
+
+.host-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.host-name {
+  font: var(--mat-sys-title-small);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.host-meta {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.host-flag {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: var(--mat-sys-corner-full);
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font: var(--mat-sys-label-small);
+}

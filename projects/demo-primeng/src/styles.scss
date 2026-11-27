@@ -1,0 +1,27 @@
+// The PrimeNG theme comes from providePrimeNG() in app.config.ts. This is
+// the cx-graph preset that maps its tokens to PrimeNG's design tokens.
+@import '../../cx-graph/themes/primeng.css';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--p-surface-100);
+  color: var(--p-text-color);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
+
+.app-dark body {
+  background: var(--p-surface-950);
+}
+
+// A tone of the app's own. Any name works once these three are defined.
+cx-graph {
+  --cx-stale-tint: color-mix(in srgb, var(--p-purple-500) 16%, transparent);
+  --cx-stale-text: light-dark(var(--p-purple-700), var(--p-purple-300));
+  --cx-stale-line: light-dark(var(--p-purple-500), var(--p-purple-400));
+}

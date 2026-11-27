@@ -1,0 +1,338 @@
+<ng-template #icon let-name>
+  @if (name) {
+    @if (iconTemplate(); as custom) {
+      <span class="cx-icon" aria-hidden="true">
+        <ng-container [ngTemplateOutlet]="custom.template" [ngTemplateOutletContext]="{ $implicit: name, name: name }" />
+      </span>
+    } @else if (iconPath(name)) {
+      <svg class="cx-icon cx-icon--svg" aria-hidden="true" viewBox="0 0 24 24"><path [attr.d]="iconPath(name)" /></svg>
+    }
+  }
+</ng-template>
+
+<ng-template #ui let-name>
+  <svg class="cx-icon cx-icon--svg" aria-hidden="true" viewBox="0 0 24 24"><path [attr.d]="iconPath(name)" /></svg>
+</ng-template>
+
+@if (toolbar()) {
+  <div class="cx-toolbar" role="toolbar" [attr.aria-label]="text().canvas">
+    <label class="cx-find">
+      <span class="cx-sr">{{ text().find }}</span>
+      <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'search' }" />
+      <input type="search" [placeholder]="text().findPlaceholder" [value]="query()" (input)="onQuery($event)" />
+      @if (matches()) {
+        <span class="cx-find__count" aria-live="polite">{{ text().matches(matchCount()) }}</span>
+      }
+    </label>
+    <span class="cx-sep" aria-hidden="true"></span>
+    <button type="button" class="cx-btn" (click)="expandAll()">{{ text().expandAll }}</button>
+    <button type="button" class="cx-btn" (click)="collapseAll()">{{ text().collapseAll }}</button>
+    <span class="cx-sep" aria-hidden="true"></span>
+    <button type="button" class="cx-btn cx-btn--icon" [attr.aria-label]="text().zoomOut" (click)="zoomOut()">
+      <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'minus' }" />
+    </button>
+    <span class="cx-zoom">{{ zoomPct() }}%</span>
+    <button type="button" class="cx-btn cx-btn--icon" [attr.aria-label]="text().zoomIn" (click)="zoomIn()">
+      <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'plus' }" />
+    </button>
+    <button type="button" class="cx-btn" (click)="fit()">{{ text().fit }}</button>
+    <span class="cx-toolbar__status">{{ text().showing(visibleCount(), totalCount()) }}</span>
+    <ng-content select="[cxToolbarEnd]" />
+    @if (legend()) {
+      <button type="button" class="cx-btn" [attr.aria-pressed]="legendOpen()" (click)="legendOpen.set(!legendOpen())">
+        {{ text().legend }}
+      </button>
+    }
+  </div>
+}
+
+<div
+  #viewport
+  class="cx-viewport"
+  role="group"
+  [attr.aria-label]="text().canvas"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+  (wheel)="onWheel($event)"
+  (keydown)="onKey($event)"
+>
+  <div class="cx-dots" aria-hidden="true" [style.background-position]="tx() + 'px ' + ty() + 'px'"></div>
+
+  <div class="cx-world" [style.transform]="worldTransform()" [style.width.px]="world().width" [style.height.px]="world().height">
+    @for (g of groupVms(); track g.id) {
+      <div
+        class="cx-group"
+        [class.cx-group--open]="g.expanded"
+        [class.cx-dim]="isDim(g.id)"
+        [class.cx-pinned]="pinnedId() === g.id"
+        [class.cx-match]="matches()?.has(g.id)"
+        [style]="g.style"
+      >
+        <div class="cx-group__head">
+          <button
+            type="button"
+            class="cx-group__toggle"
+            [attr.aria-label]="g.expanded ? text().collapse(g.title) : text().expand(g.title)"
+            [attr.aria-expanded]="g.expanded"
+            (click)="onToggleClick(g)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="ui"
+              [ngTemplateOutletContext]="{ $implicit: g.expanded ? 'chevron-down' : 'chevron-right' }"
+            />
+          </button>
+          <button
+            type="button"
+            class="cx-group__title"
+            [attr.data-cx-id]="g.id"
+            [attr.tabindex]="tabId() === g.id ? 0 : -1"
+            [attr.aria-label]="g.aria + ', ' + g.total + ' ' + g.noun"
+            [attr.aria-pressed]="pinnedId() === g.id"
+            (click)="onNodeClick(g)"
+            (pointerenter)="onEnter(g, $event)"
+            (pointerleave)="onLeave()"
+            (focus)="onFocus(g, $event)"
+            (blur)="onBlur()"
+            (keydown)="onNodeKey(g, $event)"
+          >
+            <span class="cx-kind">{{ g.typeLabel }} · {{ text().group }}</span>
+            <span class="cx-group__name">{{ g.title }}</span>
+          </button>
+          @if (g.status; as s) {
+            <span class="cx-chip">{{ s.label }}</span>
+          }
+        </div>
+        @if (!g.expanded) {
+          <div class="cx-group__summary">
+            <span class="cx-group__count">
+              {{ text().hidden(g.total, g.noun) }}
+              @if (matches()?.get(g.id); as m) {
+                <span class="cx-group__matches">{{ text().matches(m) }}</span>
+              }
+            </span>
+            @if (g.summaryParts.length) {
+              <span class="cx-bar" aria-hidden="true">
+                @for (p of g.summaryParts; track $index) {
+                  <span [style.width.%]="p.pct" [style.background]="p.color"></span>
+                }
+              </span>
+              <span class="cx-group__breakdown">{{ g.summaryText }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <svg class="cx-edges" aria-hidden="true" [attr.width]="world().width" [attr.height]="world().height">
+      @for (e of edgeVms(); track e.id) {
+        @let level = edgeLevel(e);
+        <g [class.cx-dim]="level === 0" [class.cx-strong]="level === 2" [style.color]="e.color">
+          <path class="cx-edge" [attr.d]="e.d" [attr.stroke-width]="level === 2 ? e.width + 0.75 : e.width" [attr.stroke-dasharray]="e.dash" />
+          @if (e.head) {
+            <path class="cx-edge__head" [attr.d]="e.head" />
+          }
+        </g>
+      }
+    </svg>
+
+    @for (e of edgeVms(); track e.id) {
+      @if (e.badge) {
+        <span
+          class="cx-edge__badge"
+          [class.cx-dim]="edgeLevel(e) === 0"
+          [style.left.px]="e.mid.x"
+          [style.top.px]="e.mid.y"
+          [style.border-color]="e.color"
+          >{{ e.badge }}</span
+        >
+      }
+    }
+
+    @for (n of leafVms(); track n.id) {
+      @if (n.role === 'more') {
+        <button
+          type="button"
+          class="cx-more"
+          [class.cx-dim]="isDim(n.id)"
+          [attr.data-cx-id]="n.id"
+          [attr.tabindex]="tabId() === n.id ? 0 : -1"
+          [style]="n.style"
+          [disabled]="loading().has(n.node.id)"
+          (click)="onNodeClick(n)"
+          (focus)="onFocus(n, $event)"
+          (keydown)="onNodeKey(n, $event)"
+        >
+          <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'plus' }" />
+          @if (loading().has(n.node.id)) {
+            {{ text().loading }}
+          } @else {
+            {{ text().showMore(n.remaining, n.noun) }}
+            @if (matches()?.get(n.id); as m) {
+              <span class="cx-group__matches">{{ text().matches(m) }}</span>
+            }
+          }
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="cx-node"
+          [class.cx-node--dashed]="n.type.border === 'dashed'"
+          [class.cx-node--emphasis]="n.type.emphasis"
+          [class.cx-node--filled]="n.filled"
+          [class.cx-node--mono]="n.type.mono"
+          [class.cx-dim]="isDim(n.id)"
+          [class.cx-pinned]="pinnedId() === n.id"
+          [class.cx-match]="matches()?.has(n.id)"
+          [attr.data-cx-id]="n.id"
+          [attr.data-cx-kind]="n.node.kind"
+          [attr.tabindex]="tabId() === n.id ? 0 : -1"
+          [attr.aria-label]="n.aria"
+          [attr.aria-pressed]="pinnedId() === n.id"
+          [style]="n.style"
+          (click)="onNodeClick(n)"
+          (pointerenter)="onEnter(n, $event)"
+          (pointerleave)="onLeave()"
+          (focus)="onFocus(n, $event)"
+          (blur)="onBlur()"
+          (keydown)="onNodeKey(n, $event)"
+        >
+          <span class="cx-node__bar" aria-hidden="true"></span>
+          @if (n.body; as body) {
+            <ng-container [ngTemplateOutlet]="body" [ngTemplateOutletContext]="n.ctx" />
+          } @else {
+            <span class="cx-node__head">
+              <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{ $implicit: n.icon }" />
+              <span class="cx-kind">{{ n.kindLabel }}</span>
+              @if (n.status; as s) {
+                <span class="cx-chip">{{ s.label }}</span>
+              }
+            </span>
+            <span class="cx-node__title">{{ n.title }}</span>
+            @if (n.sub) {
+              <span class="cx-node__sub">{{ n.sub }}</span>
+            }
+          }
+        </button>
+      }
+    }
+  </div>
+
+  @if (!vms().length) {
+    <div class="cx-empty">{{ text().empty }}</div>
+  }
+
+  @if (card(); as c) {
+    <section
+      #card
+      class="cx-card"
+      [class.cx-card--pinned]="c.pinned"
+      [attr.aria-label]="c.vm.aria"
+      [style]="c.vm.style"
+      [style.transform]="'translate(' + c.x + 'px,' + c.y + 'px)'"
+      [style.width.px]="c.width"
+      [style.height]="'auto'"
+      (pointerenter)="onCardEnter()"
+      (pointerleave)="onLeave()"
+    >
+      <header class="cx-card__head">
+        <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{ $implicit: c.vm.icon }" />
+        <span class="cx-card__kind">{{ c.vm.kindLabel }}</span>
+        <span class="cx-card__grow"></span>
+        @if (c.vm.status; as s) {
+          <span class="cx-chip">{{ s.label }}</span>
+        }
+        @if (c.pinned) {
+          <button type="button" class="cx-card__close" [attr.aria-label]="text().close" (click)="unpin()">
+            <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'close' }" />
+          </button>
+        }
+      </header>
+      <div class="cx-card__body">
+        <div class="cx-card__title" [class.cx-mono]="c.vm.type.mono">{{ c.vm.title }}</div>
+        @if (c.detail; as detail) {
+          <div class="cx-card__custom">
+            <ng-container [ngTemplateOutlet]="detail" [ngTemplateOutletContext]="c.vm.ctx" />
+          </div>
+        }
+        @for (f of c.fields; track $index) {
+          <div class="cx-field">
+            <span class="cx-field__label">{{ f.label }}</span>
+            <span class="cx-field__value" [class.cx-mono]="f.mono">{{ f.value }}</span>
+          </div>
+        }
+        <div class="cx-card__relations">
+          <span>{{ text().incoming(c.incoming) }}</span>
+          <span>{{ text().outgoing(c.outgoing) }}</span>
+        </div>
+      </div>
+      <footer class="cx-card__foot">
+        @for (a of c.actions; track a.id; let first = $first) {
+          @if (a.href) {
+            <a class="cx-btn cx-btn--small" [class.cx-btn--primary]="first" [href]="a.href" (click)="runAction(c, a, $event)">
+              {{ a.label }}
+              <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'arrow-right' }" />
+            </a>
+          } @else {
+            <button type="button" class="cx-btn cx-btn--small" [class.cx-btn--primary]="first" (click)="runAction(c, a, $event)">
+              {{ a.label }}
+              @if (!a.id.startsWith('cx:')) {
+                <ng-container [ngTemplateOutlet]="ui" [ngTemplateOutletContext]="{ $implicit: 'arrow-right' }" />
+              }
+            </button>
+          }
+        }
+        <span class="cx-card__hint">{{ c.pinned ? text().pinned : text().clickToPin }}</span>
+      </footer>
+    </section>
+  }
+
+  @if (legend() && legendOpen() && vms().length) {
+    <div class="cx-legend">
+      @if (legendNodes().length) {
+        <span class="cx-legend__title">{{ text().nodeTypes }}</span>
+        @for (n of legendNodes(); track n.key) {
+          <span class="cx-legend__row">
+            <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{ $implicit: n.icon }" />
+            <span>{{ n.label }}</span>
+          </span>
+        }
+      }
+      @if (legendEdges().length) {
+        <span class="cx-legend__title">{{ text().edgeTypes }}</span>
+        @for (e of legendEdges(); track e.key) {
+          <button type="button" class="cx-legend__edge" [attr.aria-pressed]="e.on" (click)="toggleEdgeKind(e.key)">
+            <svg aria-hidden="true" width="32" height="8" viewBox="0 0 32 8">
+              <path d="M1 4 L31 4" [style.stroke]="e.color" [attr.stroke-width]="e.width" [attr.stroke-dasharray]="e.dash" />
+            </svg>
+            <span>{{ e.label }}</span>
+          </button>
+        }
+      }
+    </div>
+  }
+
+  @if (minimap() && vms().length) {
+    <div class="cx-minimap" aria-hidden="true" (pointerdown)="onMiniPointer($event)" (pointermove)="onMiniPointer($event)">
+      @for (m of mini().rects; track m.id) {
+        <span
+          class="cx-minimap__node"
+          [class.cx-minimap__node--group]="m.group"
+          [style.left.px]="m.x"
+          [style.top.px]="m.y"
+          [style.width.px]="m.w"
+          [style.height.px]="m.h"
+          [style.background]="m.group ? null : m.color"
+        ></span>
+      }
+      <span
+        class="cx-minimap__view"
+        [style.left.px]="mini().view.x"
+        [style.top.px]="mini().view.y"
+        [style.width.px]="mini().view.w"
+        [style.height.px]="mini().view.h"
+      ></span>
+    </div>
+  }
+</div>

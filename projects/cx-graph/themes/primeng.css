@@ -1,0 +1,44 @@
+/*
+ * cx-graph preset for PrimeNG 18+ (styled mode design tokens).
+ *
+ * Maps the cx-graph tokens to the `--p-*` properties of a PrimeNG preset
+ * such as Aura. Light and dark steps switch with the `color-scheme` that
+ * PrimeNG sets on its dark mode selector.
+ */
+cx-graph {
+  --cx-font: inherit;
+  --cx-canvas: light-dark(var(--p-surface-50), var(--p-surface-950));
+  --cx-dot: light-dark(var(--p-surface-200), var(--p-surface-800));
+  --cx-node-bg: var(--p-content-background);
+  --cx-surface-2: var(--p-content-hover-background);
+  --cx-group-bg: light-dark(
+    color-mix(in srgb, var(--p-surface-200) 45%, transparent),
+    color-mix(in srgb, var(--p-surface-800) 45%, transparent)
+  );
+  --cx-node-border: var(--p-content-border-color);
+  --cx-divider: var(--p-content-border-color);
+  --cx-text: var(--p-text-color);
+  --cx-hint: var(--p-text-muted-color);
+  --cx-accent: var(--p-primary-color);
+  --cx-accent-text: light-dark(var(--p-primary-600), var(--p-primary-300));
+  --cx-accent-contrast: var(--p-primary-contrast-color);
+  --cx-accent-tint: color-mix(in srgb, var(--p-primary-color) 14%, transparent);
+  --cx-node-radius: var(--p-content-border-radius);
+  --cx-control-radius: var(--p-content-border-radius);
+
+  --cx-basic-tint: light-dark(var(--p-surface-100), var(--p-surface-800));
+  --cx-basic-text: light-dark(var(--p-surface-700), var(--p-surface-200));
+  --cx-basic-line: light-dark(var(--p-surface-400), var(--p-surface-500));
+  --cx-success-tint: color-mix(in srgb, var(--p-green-500) 16%, transparent);
+  --cx-success-text: light-dark(var(--p-green-700), var(--p-green-300));
+  --cx-success-line: light-dark(var(--p-green-600), var(--p-green-400));
+  --cx-info-tint: color-mix(in srgb, var(--p-sky-500) 16%, transparent);
+  --cx-info-text: light-dark(var(--p-sky-700), var(--p-sky-300));
+  --cx-info-line: light-dark(var(--p-sky-600), var(--p-sky-400));
+  --cx-warning-tint: color-mix(in srgb, var(--p-orange-500) 16%, transparent);
+  --cx-warning-text: light-dark(var(--p-orange-700), var(--p-orange-300));
+  --cx-warning-line: light-dark(var(--p-orange-600), var(--p-orange-400));
+  --cx-danger-tint: color-mix(in srgb, var(--p-red-500) 16%, transparent);
+  --cx-danger-text: light-dark(var(--p-red-700), var(--p-red-300));
+  --cx-danger-line: light-dark(var(--p-red-600), var(--p-red-400));
+}

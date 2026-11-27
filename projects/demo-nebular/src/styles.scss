@@ -1,0 +1,23 @@
+// The app's Nebular themes, then the cx-graph preset that maps its tokens
+// to Nebular's.
+@import 'themes';
+@import '@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+}
+
+@import '../../cx-graph/themes/nebular.css';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+// An app-level choice on top of the preset: Nebular's hint colour is too
+// light for small text in the light themes, so the graph uses a darker step.
+.nb-theme-default cx-graph,
+.nb-theme-corporate cx-graph {
+  --cx-hint: var(--color-basic-700);
+}

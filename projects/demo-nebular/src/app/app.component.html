@@ -1,0 +1,94 @@
+<nb-layout>
+  <nb-layout-header fixed>
+    <div class="brand"><strong>cx-graph</strong> <span class="hint">Nebular demo · agent session execution graph</span></div>
+    <nb-select class="theme" size="small" [selected]="theme()" (selectedChange)="setTheme($event)">
+      <nb-option value="default">Default</nb-option>
+      <nb-option value="dark">Dark</nb-option>
+      <nb-option value="cosmic">Cosmic</nb-option>
+      <nb-option value="corporate">Corporate</nb-option>
+    </nb-select>
+  </nb-layout-header>
+
+  <nb-layout-column>
+    <div class="page">
+      <nb-card class="graph-card">
+        <nb-card-header>
+          <span>Execution graph</span>
+          <span class="chip chip-success">Completed</span>
+          <span class="hint">{{ counts() }}</span>
+        </nb-card-header>
+        <nb-card-body>
+          @if (data(); as d) {
+            <cx-graph
+              [nodes]="d.nodes"
+              [edges]="d.edges"
+              [hooks]="hooks"
+              [highlight]="highlight()"
+              [(selected)]="selected"
+              [labels]="{ findPlaceholder: 'Find node, tool or evidence', canvas: 'Execution graph' }"
+            >
+              <!-- Icons come from Nebular's Eva pack. -->
+              <ng-template cxIcon let-name><nb-icon [icon]="name" /></ng-template>
+
+              <!-- The app renders evidence its own way inside the detail card. -->
+              <ng-template cxNodeDetail="ledger_entry" let-node>
+                <div class="evidence">
+                  <div class="evidence-row">
+                    <span class="tag">{{ node.data.source?.name }}</span>
+                    <span class="tag">{{ node.data.reliability }}</span>
+                    <span class="tag">{{ node.data.provenance }}</span>
+                  </div>
+                  <pre>{{ node.data.result ?? node.data.preview }}</pre>
+                  @if (node.data.artifact; as a) {
+                    <div class="hint">Full evidence: {{ a.name }}</div>
+                  }
+                </div>
+              </ng-template>
+            </cx-graph>
+          }
+        </nb-card-body>
+      </nb-card>
+
+      <aside>
+        @if (session()?.outcome; as o) {
+          <nb-card>
+            <nb-card-header>
+              <span>Outcome</span>
+              <span class="chip chip-warning">{{ o.disposition.verdict.replaceAll('_', ' ') }}</span>
+            </nb-card-header>
+            <nb-card-body>
+              <p class="summary">{{ o.summary }}</p>
+              <div class="section">Recommended actions</div>
+              <p class="hint">Pick one to light up its evidence in the graph.</p>
+              @for (a of o.recommendedActions; track $index) {
+                <div class="action" [class.active]="activeAction() === $index">
+                  <button nbButton size="tiny" [status]="activeAction() === $index ? 'primary' : 'basic'" (click)="pickAction($index)">
+                    {{ activeAction() === $index ? 'Clear' : 'Trace' }}
+                  </button>
+                  <div>
+                    <div class="action-text">{{ a.action }}</div>
+                    <div class="evidence-row">
+                      @for (id of a.entryIds; track id) {
+                        <button class="tag link" (click)="showEntry(id)">{{ refOf(id) }}</button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </nb-card-body>
+          </nb-card>
+        }
+        <nb-card>
+          <nb-card-header>Navigate hook log</nb-card-header>
+          <nb-card-body>
+            @for (line of log(); track $index) {
+              <code>{{ line }}</code>
+            } @empty {
+              <span class="hint">Use an action on a node's detail card.</span>
+            }
+          </nb-card-body>
+        </nb-card>
+      </aside>
+    </div>
+  </nb-layout-column>
+</nb-layout>

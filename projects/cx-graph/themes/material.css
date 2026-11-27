@@ -1,0 +1,34 @@
+/*
+ * cx-graph preset for Angular Material (Material 3 system tokens).
+ *
+ * Maps the cx-graph tokens to the `--mat-sys-*` properties that
+ * `mat.theme()` publishes. Material has no success, info or warning
+ * roles, so those tones keep the cx-graph defaults, which follow the
+ * page's `color-scheme` like Material does.
+ */
+cx-graph {
+  --cx-font: var(--mat-sys-body-medium-font);
+  --cx-canvas: var(--mat-sys-surface-container-low);
+  --cx-dot: var(--mat-sys-outline-variant);
+  --cx-node-bg: var(--mat-sys-surface);
+  --cx-surface-2: var(--mat-sys-surface-container);
+  --cx-group-bg: color-mix(in srgb, var(--mat-sys-surface-container-highest) 45%, transparent);
+  --cx-node-border: var(--mat-sys-outline-variant);
+  --cx-divider: var(--mat-sys-outline-variant);
+  --cx-text: var(--mat-sys-on-surface);
+  --cx-hint: var(--mat-sys-on-surface-variant);
+  --cx-accent: var(--mat-sys-primary);
+  --cx-accent-text: var(--mat-sys-primary);
+  --cx-accent-contrast: var(--mat-sys-on-primary);
+  --cx-accent-tint: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  --cx-shadow: var(--mat-sys-level3);
+  --cx-node-radius: var(--mat-sys-corner-medium);
+  --cx-control-radius: var(--mat-sys-corner-small);
+
+  --cx-basic-tint: var(--mat-sys-surface-container-high);
+  --cx-basic-text: var(--mat-sys-on-surface-variant);
+  --cx-basic-line: var(--mat-sys-outline);
+  --cx-danger-tint: var(--mat-sys-error-container);
+  --cx-danger-text: var(--mat-sys-on-error-container);
+  --cx-danger-line: var(--mat-sys-error);
+}

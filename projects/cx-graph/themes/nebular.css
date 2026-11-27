@@ -1,0 +1,62 @@
+/*
+ * cx-graph preset for Nebular.
+ *
+ * Maps the cx-graph tokens to the CSS custom properties that Nebular
+ * themes publish (the default since Nebular 5). Import it once, after
+ * your Nebular theme. Override any `--cx-*` value in your own styles.
+ */
+cx-graph {
+  --cx-font: var(--font-family-primary);
+  --cx-canvas: var(--background-basic-color-1);
+  --cx-dot: var(--border-basic-color-3);
+  --cx-node-bg: var(--background-basic-color-1);
+  --cx-surface-2: var(--background-basic-color-2);
+  --cx-group-bg: color-mix(in srgb, var(--background-basic-color-2) 40%, transparent);
+  --cx-node-border: var(--border-basic-color-4);
+  --cx-divider: var(--border-basic-color-3);
+  --cx-text: var(--text-basic-color);
+  --cx-hint: var(--text-hint-color);
+  --cx-accent: var(--color-primary-500);
+  --cx-accent-text: var(--color-primary-800);
+  --cx-accent-contrast: var(--text-control-color);
+  --cx-accent-tint: var(--color-primary-transparent-100);
+  --cx-node-radius: var(--border-radius);
+  --cx-control-radius: var(--border-radius);
+
+  --cx-basic-tint: var(--background-basic-color-3);
+  --cx-basic-text: var(--text-basic-color);
+  --cx-basic-line: var(--color-basic-600);
+  --cx-success-tint: var(--color-success-transparent-200);
+  --cx-success-text: var(--color-success-800);
+  --cx-success-line: var(--color-success-700);
+  --cx-info-tint: var(--color-info-transparent-200);
+  --cx-info-text: var(--color-info-800);
+  --cx-info-line: var(--color-info-700);
+  --cx-warning-tint: var(--color-warning-transparent-200);
+  --cx-warning-text: var(--color-warning-800);
+  --cx-warning-line: var(--color-warning-700);
+  --cx-danger-tint: var(--color-danger-transparent-200);
+  --cx-danger-text: var(--color-danger-800);
+  --cx-danger-line: var(--color-danger-700);
+}
+
+/* Dark themes need lighter text and line steps to keep contrast. */
+.nb-theme-dark cx-graph,
+.nb-theme-cosmic cx-graph {
+  color-scheme: dark;
+  --cx-canvas: var(--background-basic-color-2);
+  --cx-group-bg: color-mix(in srgb, var(--background-basic-color-3) 55%, transparent);
+  --cx-accent-text: var(--color-primary-400);
+  --cx-accent-tint: var(--color-primary-transparent-200);
+
+  --cx-basic-tint: var(--color-basic-transparent-200);
+  --cx-basic-text: var(--color-basic-400);
+  --cx-success-text: var(--color-success-400);
+  --cx-success-line: var(--color-success-500);
+  --cx-info-text: var(--color-info-400);
+  --cx-info-line: var(--color-info-500);
+  --cx-warning-text: var(--color-warning-400);
+  --cx-warning-line: var(--color-warning-500);
+  --cx-danger-text: var(--color-danger-400);
+  --cx-danger-line: var(--color-danger-500);
+}

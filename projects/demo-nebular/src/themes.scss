@@ -1,0 +1,10 @@
+// The stock Nebular themes, with a font stack that needs no download.
+@import '@nebular/theme/styles/theming';
+@import '@nebular/theme/styles/themes';
+
+$font: unquote('"Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif');
+
+$nb-themes: nb-register-theme((font-family-primary: $font, font-family-secondary: $font), default, default);
+$nb-themes: nb-register-theme((font-family-primary: $font, font-family-secondary: $font), dark, dark);
+$nb-themes: nb-register-theme((font-family-primary: $font, font-family-secondary: $font), cosmic, cosmic);
+$nb-themes: nb-register-theme((font-family-primary: $font, font-family-secondary: $font), corporate, corporate);

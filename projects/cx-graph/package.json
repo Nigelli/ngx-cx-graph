@@ -1,0 +1,41 @@
+{
+  "name": "ngx-cx-graph",
+  "version": "0.1.0",
+  "description": "An explorable graph component for Angular: collapsible groups, detail cards, themable through CSS custom properties.",
+  "author": "Nigel Anderson",
+  "license": "MIT",
+  "homepage": "https://github.com/Nigelli/ngx-cx-graph#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nigelli/ngx-cx-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nigelli/ngx-cx-graph/issues"
+  },
+  "keywords": [
+    "angular",
+    "graph",
+    "graph-explorer",
+    "dag",
+    "layered-layout",
+    "visualization",
+    "attack-graph",
+    "nebular",
+    "angular-material",
+    "primeng"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=19.0.0 <23.0.0",
+    "@angular/core": ">=19.0.0 <23.0.0",
+    "rxjs": "^7.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "exports": {
+    "./themes/*.css": {
+      "default": "./themes/*.css"
+    }
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 16px;
+  background: var(--p-content-background);
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.sub {
+  color: var(--p-text-muted-color);
+}
+
+.grow {
+  flex: 1 1 auto;
+}
+
+.dark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 16px;
+}
+
+cx-graph {
+  border: 1px solid var(--p-content-border-color);
+  border-radius: var(--p-content-border-radius);
+
+  .pi {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,79 @@
+<mat-toolbar>
+  <span class="brand">cx-graph</span>
+  <span class="sub">Material demo · attack graph</span>
+  <span class="grow"></span>
+  <mat-slide-toggle [checked]="dark()" (change)="setDark($event.checked)">Dark</mat-slide-toggle>
+</mat-toolbar>
+
+<div class="page">
+  <mat-card appearance="outlined" class="side">
+    <mat-card-header>
+      <mat-card-title>Attack paths</mat-card-title>
+      <mat-card-subtitle>Pick a path to trace it through the graph.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-nav-list>
+        @for (p of paths; track p.name) {
+          <a mat-list-item [activated]="path() === $index" (click)="pick($index)">
+            <span matListItemTitle>{{ p.name }}</span>
+            <span matListItemLine>{{ p.risk }} risk · {{ p.steps.length }} steps</span>
+          </a>
+        }
+      </mat-nav-list>
+      <p class="note">
+        The toolbar above the graph is built from Material components. It calls the graph's public methods, and the
+        graph's own toolbar is switched off.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="main">
+    <div class="tools">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="find">
+        <mat-icon matPrefix svgIcon="search" />
+        <input matInput placeholder="Find host, CVE or identity" [value]="query()" (input)="query.set($any($event.target).value)" />
+      </mat-form-field>
+      <button mat-stroked-button (click)="graph().expandAll()">Expand all</button>
+      <button mat-stroked-button (click)="graph().collapseAll()">Collapse all</button>
+      <mat-button-toggle-group [value]="direction()" (change)="direction.set($event.value)" aria-label="Layout direction" hideSingleSelectionIndicator>
+        <mat-button-toggle value="RIGHT">Left to right</mat-button-toggle>
+        <mat-button-toggle value="DOWN">Top down</mat-button-toggle>
+      </mat-button-toggle-group>
+      <span class="grow"></span>
+      <button mat-icon-button matTooltip="Zoom out" aria-label="Zoom out" (click)="graph().zoomOut()"><mat-icon svgIcon="minus" /></button>
+      <span class="zoom">{{ (graph().zoom() * 100).toFixed(0) }}%</span>
+      <button mat-icon-button matTooltip="Zoom in" aria-label="Zoom in" (click)="graph().zoomIn()"><mat-icon svgIcon="plus" /></button>
+      <button mat-button (click)="graph().fit()">Fit</button>
+    </div>
+
+    <cx-graph
+      [nodes]="nodes"
+      [edges]="edges"
+      [nodeTypes]="nodeTypes"
+      [edgeTypes]="edgeTypes"
+      [hooks]="hooks"
+      [direction]="direction()"
+      [highlight]="highlight()"
+      [(query)]="query"
+      [toolbar]="false"
+      [pageSize]="6"
+      [labels]="{ canvas: 'Attack graph' }"
+    >
+      <ng-template cxIcon let-name><mat-icon [svgIcon]="name" /></ng-template>
+
+      <!-- Hosts get their own node content. -->
+      <ng-template cxNodeBody="host" let-node let-status="status">
+        <div class="host">
+          <mat-icon svgIcon="server" />
+          <div class="host-text">
+            <div class="host-name">{{ node.label }}</div>
+            <div class="host-meta">{{ node.data.ip }} · {{ node.data.os }}</div>
+          </div>
+          @if (node.data.exposed) {
+            <span class="host-flag">Exposed</span>
+          }
+        </div>
+      </ng-template>
+    </cx-graph>
+  </mat-card>
+</div>

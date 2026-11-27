@@ -1,0 +1,30 @@
+<header>
+  <strong>cx-graph</strong>
+  <span class="sub">PrimeNG demo · data pipeline</span>
+  <span class="grow"></span>
+  @if (last()) {
+    <p-tag severity="secondary" [value]="last()" />
+  }
+  <label class="dark"><p-toggleswitch [(ngModel)]="dark" (onChange)="setDark($event.checked)" /> Dark</label>
+</header>
+
+<main>
+  <!-- The built-in toolbar stays on. PrimeNG controls are projected into its end slot. -->
+  <cx-graph
+    [nodes]="nodes()"
+    [edges]="edges"
+    [nodeTypes]="nodeTypes"
+    [edgeTypes]="edgeTypes"
+    [hooks]="hooks"
+    [direction]="direction"
+    [expandDepth]="2"
+    wheel="zoom"
+    [labels]="{ canvas: 'Pipeline', findPlaceholder: 'Find a job or dataset' }"
+  >
+    <ng-template cxIcon let-name><i class="pi" [class]="name"></i></ng-template>
+    <ng-container cxToolbarEnd>
+      <p-selectbutton [options]="directions" [(ngModel)]="direction" optionLabel="label" optionValue="value" size="small" [allowEmpty]="false" />
+      <p-button label="Simulate run" icon="pi pi-play" size="small" [loading]="running()" (onClick)="run()" />
+    </ng-container>
+  </cx-graph>
+</main>
