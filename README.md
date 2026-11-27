@@ -62,12 +62,12 @@ Each app uses a different design system and a different kind of graph, to show t
 
 | | Nebular | Material | PrimeNG |
 |---|---|---|---|
-| Graph | Execution graph of an AI agent session, 153 nodes | Attack graph | Data pipeline |
+| Graph | Run of a research agent: steps, searches, sources, claims | Attack graph | Data pipeline |
 | Direction | Left to right | Switchable | Top down by default |
 | Theme | Preset plus one override, four Nebular themes | Preset, light and dark | Preset, light and dark, one custom tone |
 | Toolbar | Built in | Built from Material components on the public API | Built in, with PrimeNG controls projected in |
 | Icons | Eva icons through `nb-icon` | `mat-icon` | PrimeIcons |
-| Templates | Custom detail card for evidence | Custom node content for hosts | None |
+| Templates | Custom detail card for sources | Custom node content for hosts | None |
 | Also shows | `reveal()` deep links, `highlight`, layout-only edges | Lazy loading of a 40-host group, path highlighting, cycles | Live status updates through the `nodes` input |
 
 All data in the sample apps is fictional.

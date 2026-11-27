@@ -3,7 +3,7 @@ import { CxIconTemplateContext, CxNodeTemplateContext } from './model';
 
 /**
  * Replaces the fields of the detail card for one node kind:
- * `<ng-template cxNodeDetail="ledger_entry" let-node>...</ng-template>`.
+ * `<ng-template cxNodeDetail="source" let-node>...</ng-template>`.
  * Leave the kind empty to match every kind without its own template.
  */
 @Directive({ selector: 'ng-template[cxNodeDetail]', standalone: true })

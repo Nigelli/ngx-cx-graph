@@ -52,7 +52,7 @@
     text-transform: capitalize;
   }
 
-  @each $status in (success, warning) {
+  @each $status in (success) {
     .chip-#{$status} {
       background-color: nb-theme(color-#{$status}-transparent-200);
       color: nb-theme(color-#{$status}-700);
@@ -71,7 +71,7 @@
     text-transform: uppercase;
   }
 
-  .action {
+  .reason {
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -79,7 +79,7 @@
     border-top: 1px solid nb-theme(border-basic-color-3);
   }
 
-  .action-text {
+  .reason-text {
     display: -webkit-box;
     overflow: hidden;
     font-size: 0.78rem;
@@ -88,11 +88,11 @@
     -webkit-line-clamp: 3;
   }
 
-  .action.active .action-text {
+  .reason.active .reason-text {
     -webkit-line-clamp: unset;
   }
 
-  .evidence-row {
+  .tag-row {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -114,17 +114,20 @@
     color: nb-theme(text-basic-color);
   }
 
-  .evidence pre {
-    max-height: 140px;
-    margin: 8px 0 0;
-    padding: 8px;
-    overflow: auto;
+  .question {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+  }
+
+  .source blockquote {
+    margin: 8px 0;
+    padding: 8px 10px;
+    border-left: 3px solid nb-theme(border-basic-color-4);
     border-radius: nb-theme(border-radius);
     background: nb-theme(background-basic-color-2);
-    font-size: 11px;
-    line-height: 15px;
-    white-space: pre-wrap;
-    word-break: break-all;
+    font-size: 12px;
+    line-height: 17px;
   }
 
   code {

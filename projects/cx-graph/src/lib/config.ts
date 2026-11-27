@@ -77,7 +77,7 @@ export const CX_DEFAULT_LABELS: CxGraphLabels = {
   matches: (count) => (count === 1 ? '1 match' : `${count} matches`),
 };
 
-/** "tool_call" becomes "Tool call", "sans.hypothesis" becomes "Hypothesis". */
+/** "tool_call" becomes "Tool call", "net.host" becomes "Host". */
 export function cxHumanize(key: string): string {
   const last = key.split('.').pop() ?? key;
   const words = last.replace(/[_-]+/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').trim().toLowerCase();

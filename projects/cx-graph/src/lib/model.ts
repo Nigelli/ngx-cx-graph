@@ -85,7 +85,7 @@ export interface CxNodeType<N extends CxNode = CxNode> {
   /** Short reference shown after the kind label, for example "E-12". */
   ref?: (node: N) => string | undefined;
   status?: (node: N) => CxStatus | undefined;
-  /** Fill the whole node with a tone, for example an outcome verdict. */
+  /** Fill the whole node with a tone, for example a final result. */
   fill?: (node: N) => CxTone | undefined;
   detail?: (node: N) => CxField[];
   actions?: (node: N) => CxAction[];
